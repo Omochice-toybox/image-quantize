@@ -13,8 +13,7 @@ jobs:
     timeout-minutes: 30
     outputs:
       actions: ${{steps.changes.outputs.actions}}
-      deno: ${{steps.changes.outputs.deno}}
-      karabiner: ${{steps.changes.outputs.karabiner}}
+      renovate: ${{steps.changes.outputs.renovate}}
     runs-on: ubuntu-latest
     permissions: {}
     steps:
@@ -60,6 +59,10 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
       - name: setup nix
         uses: ./.github/actions/setup-nix
         with:
@@ -73,6 +76,10 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
       - name: setup nix
         uses: ./.github/actions/setup-nix
         with:
