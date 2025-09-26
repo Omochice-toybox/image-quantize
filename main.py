@@ -23,10 +23,10 @@ class Size:
             raise ValueError("Width and height must be one or more.")
         return v
 
-
 def quantize_image_with_median(img: Image.Image, size: Size) -> Image.Image:
     """
     Quantize the image to the specified size using median color values.
+    If the target size is larger than the original, the image will be upscaled first.
 
     Args:
         img (PIL.Image.Image): The input image to be quantized.
@@ -35,6 +35,16 @@ def quantize_image_with_median(img: Image.Image, size: Size) -> Image.Image:
         PIL.Image.Image: The quantized image.
     """
     original_size = Size(*img.size)
+
+    if size.width > original_size.width or size.height > original_size.height:
+        scale_x = (size.width + original_size.width - 1) // original_size.width
+        scale_y = (size.height + original_size.height - 1) // original_size.height
+        scale = max(scale_x, scale_y)
+
+        upscaled_size = (original_size.width * scale, original_size.height * scale)
+        img = img.resize(upscaled_size)
+        original_size = Size(*img.size)
+
     image_pixels = np.array(img)
 
     block_size = Size(
