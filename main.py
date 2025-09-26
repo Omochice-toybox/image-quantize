@@ -23,6 +23,7 @@ class Size:
             raise ValueError("Width and height must be one or more.")
         return v
 
+
 def quantize_image_with_median(img: Image.Image, size: Size) -> Image.Image:
     """
     Quantize the image to the specified size using median color values.
