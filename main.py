@@ -1,3 +1,4 @@
+import math
 from itertools import product
 
 import numpy as np
@@ -38,12 +39,12 @@ def quantize_image_with_median(img: Image.Image, size: Size) -> Image.Image:
     original_size = Size(*img.size)
 
     if size.width > original_size.width or size.height > original_size.height:
-        scale_x = (size.width + original_size.width - 1) // original_size.width
-        scale_y = (size.height + original_size.height - 1) // original_size.height
+        scale_x = math.ceil(size.width / original_size.width)
+        scale_y = math.ceil(size.height / original_size.height)
         scale = max(scale_x, scale_y)
 
         upscaled_size = (original_size.width * scale, original_size.height * scale)
-        img = img.resize(upscaled_size)
+        img = img.resize(upscaled_size, resample=Image.LANCZOS)
         original_size = Size(*img.size)
 
     image_pixels = np.array(img)
