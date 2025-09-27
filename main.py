@@ -1,3 +1,4 @@
+import math
 from itertools import product
 
 import numpy as np
@@ -27,6 +28,7 @@ class Size:
 def quantize_image_with_median(img: Image.Image, size: Size) -> Image.Image:
     """
     Quantize the image to the specified size using median color values.
+    If the target size is larger than the original, the image will be upscaled first.
 
     Args:
         img (PIL.Image.Image): The input image to be quantized.
@@ -35,6 +37,16 @@ def quantize_image_with_median(img: Image.Image, size: Size) -> Image.Image:
         PIL.Image.Image: The quantized image.
     """
     original_size = Size(*img.size)
+
+    if size.width > original_size.width or size.height > original_size.height:
+        scale_x = math.ceil(size.width / original_size.width)
+        scale_y = math.ceil(size.height / original_size.height)
+        scale = max(scale_x, scale_y)
+
+        upscaled_size = (original_size.width * scale, original_size.height * scale)
+        img = img.resize(upscaled_size, resample=Image.LANCZOS)
+        original_size = Size(*img.size)
+
     image_pixels = np.array(img)
 
     block_size = Size(
